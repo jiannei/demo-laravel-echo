@@ -81,6 +81,12 @@ Route::get('test-broadcast', function(){
 });
 ```
 
+* 安装 redis 驱动
+
+```
+composer require predis/predis
+```
+
 * 配置启用 redis 队列
 
 ```
@@ -146,7 +152,7 @@ window.Echo.channel('test-event')
 
 <img src="https://i.loli.net/2019/10/30/SQpuse5C7gDc4NI.png"/>
 
-* 问题：可以看到后端事件准备被广播，但浏览器控制台并没有任何输出，仔细查看发现，laravel-echo-server 广播的实际 channel 名称为 `echo_database_test-event`，即`APP_NAME_database_channel_name`。
+* 问题一：可以看到后端事件准备被广播，但浏览器控制台并没有任何输出，仔细查看发现，laravel-echo-server 广播的实际 channel 名称为 `echo_database_test-event`，即`APP_NAME_database_channel_name`。
 * 原因：`config/database.php` 中 redis 选项在 Laravel 6.x 版本多出了 prefix `'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),`
 * 解决：
     * 可以暂时在 `.env` 中配置 `REDIS_PREFIX=null`来去掉前缀
@@ -155,6 +161,14 @@ window.Echo.channel('test-event')
     * [Why laravel broadcast channel has a prefix?](https://github.com/laravel/framework/issues/28210)
     * [Redis keyPrefix Problem](https://github.com/laravel/echo/issues/232)
     * [config/database.php redis prefix question](https://github.com/laravel/framework/issues/28701)
+    
+* 问题二：Please remove or rename the Redis facade alias in your "app" configuration file in order to avoid collision with the PHP Redis extension.
+* 原因：laravel 6.x 版本使用phpredis 作为 redis 默认 driver，同样在`config/database.php` 中 redis 选项中可以看到 `'client' => env('REDIS_CLIENT', 'phpredis'),`
+* 解决：
+    * 在 `.env`文件中增加`REDIS_PREFIX=predis`来使用 predis 驱动
+    * 安装 php 对应版本的的 phpredis 扩展：https://github.com/phpredis/phpredis/blob/develop/INSTALL.markdown （php 7.4 版本截止到 2019.10 并没有对应扩展），并在`config/app.php`中注释或删除` 'Redis' => Illuminate\Support\Facades\Redis::class,`
+* 相关讨论：
+    [Laravel 6 使用 Redis 注意事项](https://learnku.com/laravel/t/33538)
 
 ## 启动 laravel-echo-server 的正确姿势
 
