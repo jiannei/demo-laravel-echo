@@ -156,6 +156,60 @@ window.Echo.channel('test-event')
     * [Redis keyPrefix Problem](https://github.com/laravel/echo/issues/232)
     * [config/database.php redis prefix question](https://github.com/laravel/framework/issues/28701)
 
+## 启动 laravel-echo-server 的正确姿势
+
+* 移除原先全局安装的 laravel-echo-server:
+    * `sudo npm uninstall -g laravel-echo-server`
+    * 删除项目目录中的`laravel-echo-server.json`配置文件
+
+* 进入到项目目录，将 laravel-echo-server 作为项目依赖进行安装
+
+``
+npm install laravel-echo-server --no-bin-links
+``
+
+* 创建 server.js，内容参考如下
+
+```
+require('dotenv').config();
+
+const env = process.env;
+
+require('laravel-echo-server').run({
+    authHost: env.APP_URL,
+    devMode: env.APP_DEBUG,
+    database: "redis",
+    databaseConfig: {
+        redis: {
+            host: env.REDIS_HOST,
+            port: env.REDIS_PORT,
+        }
+    }
+});
+```
+
+* 可以看到 server.js 依赖 dotenv，所以进行安装 `npm install dotenv --no-bin-links`
+* 可以使用 `node server.js`启动 laravel-echo-server 服务。或者选择在 package.json 中增加一个启动 laravel-echo-server 的 script，使用`npm run start`启动服务。参考如下：
+
+```
+{
+    "private": true,
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "dotenv": "^8.2.0",
+        "laravel-echo-server": "^1.5.9",
+    }
+}
+```
+
+### laravel-echo-server 两种启动方式对比
+
+* 第一种方式需要全局安装 laravel-echo-server，并在项目目录使用 `laravel-echo-server init`初始化生成配置文件`laravel-echo-server.json`（有利于将 laravel-echo-server 独立部署成服务？）
+* 第二种方式以项目依赖进行安装，然后与 laravel 后端共用 `.env`文件的配置
+
 ## 参考
 
 * [使用 Laravel-echo-server 构建实时应用](https://learnku.com/laravel/t/13101/using-laravel-echo-server-to-build-real-time-applications)
+* [Running Laravel Echo Server the right way](https://medium.com/@titasgailius/running-laravel-echo-server-the-right-way-32f52bb5b1c8)
