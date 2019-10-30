@@ -1,5 +1,5 @@
 {
-	"authHost": "http://demo-echo.test",
+	"authHost": "http://demo-laarvel-echo.test",
 	"authEndpoint": "/broadcasting/auth",
 	"clients": [],
 	"database": "redis",

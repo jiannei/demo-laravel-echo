@@ -11,6 +11,10 @@
 |
 */
 
+Route::get('test-broadcast', function(){
+    broadcast(new \App\Events\ExampleEvent);
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
