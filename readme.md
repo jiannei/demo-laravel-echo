@@ -31,7 +31,7 @@ cd demo-laravel-echo
 laravel-echo-server init
 ```
 
-![readme-2019-10-29-23-10-44](https://vuepress-pic-bed.oss-cn-beijing.aliyuncs.com/readme-2019-10-29-23-10-44)
+<img src="https://i.loli.net/2019/10/30/MKFbCdqUra79PLB.png"/>
 
 * 启动 laravel-echo-server 服务
 
@@ -39,7 +39,7 @@ laravel-echo-server init
 laravel-echo-server start
 ```
 
-![readme-2019-10-29-23-12-52](https://vuepress-pic-bed.oss-cn-beijing.aliyuncs.com/readme-2019-10-29-23-12-52)
+<img src="https://i.loli.net/2019/10/30/YbtHGopfxC3iSVD.png"/>
 
 ### （后端）事件广播
 
@@ -136,23 +136,15 @@ window.Echo.channel('test-event')
 
 * 访问 `http://demo-laravel-echo.test/`
 
-<p align="center">
 <img src="https://i.loli.net/2019/10/30/QPJVEiAOtHFhGej.png"/>
-</p>
 
-<p align="center">
 <img src="https://i.loli.net/2019/10/30/lm5BNwKeCvqSt7d.png"/>
-</p>
 
 * 新开窗口访问 `http://demo-laravel-echo.test/test-broadcast`
 
-<p align="center">
 <img src="https://i.loli.net/2019/10/30/Fc5dvV1MoYSn3fp.png"/>
-</p>
 
-<p align="center">
 <img src="https://i.loli.net/2019/10/30/SQpuse5C7gDc4NI.png"/>
-</p>
 
 * 问题：可以看到后端事件准备被广播，但浏览器控制台并没有任何输出，仔细查看发现，laravel-echo-server 广播的实际 channel 名称为 `echo_database_test-event`，即`APP_NAME_database_channel_name`。
 * 原因：`config/database.php` 中 redis 选项在 Laravel 6.x 版本多出了 prefix `'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),`
